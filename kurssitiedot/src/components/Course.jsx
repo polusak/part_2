@@ -34,10 +34,12 @@ const Content = (props) => {
 
 const Total = (props) => {
     const parts = props.course.parts
-    let total = 0
-    parts.forEach(part => {
-        total = total + part.exercises
-    })
+    const exercises = parts.map(part => part.exercises)
+    const init = 0
+    const total = exercises.reduce(
+        (acc, current) => acc + current,
+        init,
+    )
 
     return (
         <div>
