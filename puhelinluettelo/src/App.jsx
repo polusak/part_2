@@ -30,15 +30,25 @@ const App = () => {
     const check = persons.filter(p => p.name === newName)
     if (check.length > 0) {
       alert(`${newName} is already added to phonebook`)
+      setNewName('')
+      setNewNumber('')
     } else {
-      const newList = persons.concat(personObject)
-      setPersons(newList)
-      const up = nameFilter.toUpperCase()
-      const fp = newList.filter(p => p.name.toUpperCase().includes(up))
-      setFilteredPersons(fp)
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          const newList = persons.concat(response.data)
+          setPersons(newList)
+          const upperCaseFilter = nameFilter.toUpperCase()
+          const filteredPersonList = newList.filter(
+            p => p.name.toUpperCase().includes(upperCaseFilter)
+          )
+          setFilteredPersons(filteredPersonList)
+          setNewName('')
+          setNewNumber('')
+        }
+      )
+
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleNameChange = (event) => {
