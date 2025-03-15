@@ -44,6 +44,20 @@ const App = () => {
               filteredPersons.map(p => p.id !== modId ? p : modifiedPerson)
             )
           })
+          .catch(error => {
+            alert(
+              `'${personObject.name}' was already deleted from the server`
+            )
+            console.log(error)
+            setPersons(
+              persons.filter(p => p.id !== modId)
+            )
+            setFilteredPersons(
+              filteredPersons.filter(p => p.id !== modId)
+            )
+          }
+
+          )
       }
       setNewName('')
       setNewNumber('')
