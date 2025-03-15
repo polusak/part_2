@@ -18,9 +18,17 @@ const create = personObject => {
 const remove = (id) => {
   const request = axios.delete(`${baseUrl}/${id}`)
   return request.then(response => {
-    console.log(response.data)
     return response.data
   })
 }
 
-export default { getAll, create, remove}
+const modify = (id, newInfo) => {
+  const url = `http://localhost:3001/persons/${id}`
+  const request = axios.put(url, newInfo)
+    return request.then(response => {
+      return response.data
+    })
+}
+
+
+export default { getAll, create, remove, modify}
