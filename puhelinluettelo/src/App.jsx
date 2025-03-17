@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Notification from './components/Notification'
 import personService from './services/persons'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
@@ -11,6 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(true)
 
   useEffect(() => {
     personService
@@ -37,6 +40,13 @@ const App = () => {
         personService
           .modify(modId, personObject)
           .then(modifiedPerson => {
+            setError(false)
+            setMessage(
+              `Number of '${modifiedPerson.name}' was succesfully changed`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
             setPersons(
               persons.map(p => p.id !== modId ? p : modifiedPerson)
             )
@@ -45,9 +55,13 @@ const App = () => {
             )
           })
           .catch(error => {
-            alert(
+            setError(true)
+            setMessage(
               `'${personObject.name}' was already deleted from the server`
             )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
             console.log(error)
             setPersons(
               persons.filter(p => p.id !== modId)
@@ -65,6 +79,13 @@ const App = () => {
       personService
         .create(personObject)
         .then(returnedPersons => {
+          setError(false)
+          setMessage(
+            `'${personObject.name}' was successfully added to the list`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
           const newList = persons.concat(returnedPersons)
           setPersons(newList)
           const upperCaseFilter = nameFilter.toUpperCase()
@@ -111,6 +132,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification error={error} message={message} />
       <h2>Phonebook</h2>
       <Filter 
         value={nameFilter}
