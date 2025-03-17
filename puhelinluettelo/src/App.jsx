@@ -81,7 +81,7 @@ const App = () => {
         .then(returnedPersons => {
           setError(false)
           setMessage(
-            `'${personObject.name}' was successfully added to the list`
+            `'${personObject.name}' was successfully added to the server`
           )
           setTimeout(() => {
             setMessage(null)
@@ -106,6 +106,13 @@ const App = () => {
       personService
         .remove(person.id)
         .then(deletedPerson => {
+          setError(false)
+            setMessage(
+              `'${deletedPerson.name}' was succesfully removed from the server`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           setPersons(persons.filter(p => p.id !== deletedPerson.id))
           setFilteredPersons(
             filteredPersons.filter(p => p.id !== deletedPerson.id)
