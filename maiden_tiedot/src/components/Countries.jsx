@@ -11,13 +11,44 @@ const Countries = ({filter, countries}) => {
         flag: null
 
     }
+    
     const [countryObject, setCountry] = useState(init)
+    const [show, setShow] = useState(true)
 
+    const handleClick = (name) => {
+        countryService
+            .get(name)
+            .then(result => {
+                const infoObject = {
+                    name: result.name.common,
+                    capital: result.capital,
+                    area: result.area,
+                    languages: Object.values(result.languages),
+                    flag: result.flags.png
+
+                }
+                if (JSON.stringify(infoObject) !== JSON.stringify(countryObject)) {
+                    setCountry(infoObject)
+                }
+            })
+        setShow(false)
+    }
+
+    console.log(show === false)
+
+    if (show === false) {
+        return (
+            <div>
+                <Country country={countryObject} />
+            </div>
+        )
+    }
     if (filter.length < 1) {
         return (
             <></>
         )
     } else if (countries.length > 10) {
+        console.log(countries)
         return (
             <>
                 <br />
@@ -31,6 +62,9 @@ const Countries = ({filter, countries}) => {
                     nameObject => 
                     <p key={nameObject.common}> 
                         {nameObject.common}
+                        <button onClick={() => handleClick(nameObject.common)}>
+                            show
+                        </button>
                     </p>
                 )}
             </div>
