@@ -1,5 +1,27 @@
+import countryService from '../services/countries'
+import { useState } from 'react'
+
 const Country = ({country}) => {
-    console.log(country)
+    const [temperature, setTemperature] = useState("")
+    const [clouds, setClouds] = useState("")
+    const [wind, setWind] = useState("")
+
+    if (country.capital !== "") {
+        countryService
+        .getCoordinates(country.capital)
+        .then(result => {
+            const latitude = result[0].lat
+            const longitude = result[0].lon
+            countryService
+                .getWeather(latitude, longitude)
+                .then(result => {
+                    setTemperature(result.current.temperature_2m)
+                    setClouds(result.current.cloud_cover)
+                    setWind(result.current.wind_speed_10m)
+                })
+        })
+    }
+
     return (
         <div>
             <h1>{country.name}</h1>
@@ -13,6 +35,14 @@ const Country = ({country}) => {
             <img
                 src={country.flag}
             />
+
+            <h2>Weather in {country.capital}</h2>
+                Temperature {temperature} degrees Celsius
+                <br />
+                Cloud cover {clouds} %
+                <br />
+                Wind speed {wind} m/s
+
 
         </div>
     )
